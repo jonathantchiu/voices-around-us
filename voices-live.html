@@ -6,7 +6,9 @@
 <title>Voices Around Us — Live</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
 <style>
 /* ════════════════════════════════════════════
    DESIGN TOKENS
@@ -195,11 +197,10 @@ body{
 .map-wrap{flex:1;position:relative;overflow:hidden;background:#EAE3D8;}
 .map-canvas{
   position:absolute;inset:0;
-  background-image:linear-gradient(rgba(168,158,142,.25) 1px,transparent 1px),
-                   linear-gradient(90deg,rgba(168,158,142,.25) 1px,transparent 1px);
-  background-size:30px 30px;
+  background:#EAE3D8;
 }
-.map-svg{position:absolute;inset:0;width:100%;height:100%;}
+#mapbox-container{position:absolute;inset:0;width:100%;height:100%;}
+.mapboxgl-marker{cursor:pointer;}
 .map-top{
   position:absolute;top:0;left:0;right:0;padding:10px 16px 20px;
   background:linear-gradient(to bottom,rgba(250,248,243,1) 0%,rgba(250,248,243,.88) 65%,transparent 100%);
@@ -532,39 +533,10 @@ body{
     <div class="screen" id="s-map">
       <div class="status"><span style="font-weight:700">9:41</span><div class="status-r"><span>●●●</span><span>WiFi</span><span style="font-size:14px">▊▊</span></div></div>
       <div class="map-wrap">
-        <div class="map-canvas"></div>
-        <svg class="map-svg" viewBox="0 0 373 638" preserveAspectRatio="none">
-          <rect x="0" y="195" width="373" height="30" fill="#DDD6C5" stroke="#C9C1B0" stroke-width=".8"/>
-          <rect x="0" y="360" width="373" height="24" fill="#DDD6C5" stroke="#C9C1B0" stroke-width=".8"/>
-          <rect x="0" y="490" width="373" height="18" fill="#E2DDD0" stroke="#CCC5B5" stroke-width=".5"/>
-          <rect x="0" y="115" width="373" height="18" fill="#E2DDD0" stroke="#CCC5B5" stroke-width=".5"/>
-          <rect x="90" y="0" width="20" height="700" fill="#E2DDD0" stroke="#CCC5B5" stroke-width=".5"/>
-          <rect x="205" y="0" width="26" height="700" fill="#DDD6C5" stroke="#C9C1B0" stroke-width=".8"/>
-          <rect x="310" y="0" width="18" height="700" fill="#E2DDD0" stroke="#CCC5B5" stroke-width=".5"/>
-          <rect x="8" y="8" width="76" height="100" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="115" y="8" width="84" height="100" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="232" y="8" width="72" height="100" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="334" y="8" width="31" height="100" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="8" y="135" width="76" height="52" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="115" y="135" width="84" height="52" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="232" y="135" width="72" height="52" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="334" y="135" width="31" height="52" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="8" y="233" width="76" height="118" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="115" y="233" width="84" height="118" rx="6" fill="#C5D9B0" stroke="#AECA98" stroke-width=".5"/>
-          <text x="157" y="296" text-anchor="middle" font-size="9" fill="#7A9A60" font-family="Outfit" font-weight="600">PARK</text>
-          <rect x="232" y="233" width="72" height="118" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="334" y="233" width="31" height="118" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="8" y="390" width="76" height="90" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="115" y="390" width="84" height="90" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="232" y="390" width="72" height="90" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <rect x="334" y="390" width="31" height="90" rx="5" fill="#D2CABC" stroke="#BEB6A8" stroke-width=".5"/>
-          <text x="186" y="214" text-anchor="middle" font-size="8" fill="#9A9280" font-family="Outfit" font-weight="600">BRUIN WALK</text>
-          <text x="186" y="374" text-anchor="middle" font-size="8" fill="#9A9280" font-family="Outfit" font-weight="600">CHARLES E. YOUNG DR.</text>
-        </svg>
+        <div class="map-canvas"><div id="mapbox-container"></div></div>
         <div class="map-top">
           <div class="map-search"><span style="font-size:16px">⌕</span><span style="flex:1;color:var(--muted);font-size:14px">Search stories near you…</span></div>
         </div>
-        <div id="map-pins"></div>
         <div class="map-chips" id="map-chips">
           <div class="chip on" onclick="mapFilter('All',this)">All</div>
           <div class="chip" onclick="mapFilter('Migration',this)">Migration</div>
@@ -782,6 +754,9 @@ const SUPABASE_URL = 'https://dfrlccjeywtecoadnglt.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmcmxjY2pleXd0ZWNvYWRuZ2x0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4OTE5ODksImV4cCI6MjA4NzQ2Nzk4OX0.JzRnxcwmpxmJ5Y64B-n-iIBukRWcIdvJ9KFaiqUQ_Jw';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
+// Mapbox: Get a free token at https://account.mapbox.com/access-tokens/
+const MAPBOX_TOKEN = 'pk.eyJ1Ijoidm9pY2VzLXN1cGFiYXNlIiwiYSI6ImNtbTg2b3Y0bDBhbjAyeHB5ajk1N2Voc3UifQ.1pPcF3PcSw3CRrZheft0iw';
+
 /* ════════════════════════════════════════════
    STATE
 ════════════════════════════════════════════ */
@@ -805,11 +780,15 @@ const TAG_COLOR_MAP = {
   'Socioeconomic':'tp-gold','Resilience':'tp-amber'
 };
 
-const PIN_POSITIONS = [
-  {left:'58%',top:'50%'},{left:'28%',top:'63%'},{left:'78%',top:'36%'},
-  {left:'46%',top:'26%'},{left:'22%',top:'43%'},{left:'64%',top:'72%'},
-  {left:'36%',top:'80%'},{left:'82%',top:'60%'}
+// UCLA center; fallback coords for stories without lat/lng (small offset per index)
+const UCLA_CENTER = { lng: -118.443, lat: 34.072 };
+const OFFSET_COORDS = [
+  { lng: 0.0008, lat: -0.0002 },{ lng: -0.0012, lat: 0.0005 },{ lng: 0.0005, lat: 0.0008 },
+  { lng: -0.0002, lat: -0.0005 },{ lng: -0.0015, lat: 0.0002 },{ lng: 0.001, lat: -0.0002 },
+  { lng: -0.0008, lat: -0.0008 },{ lng: 0.0012, lat: 0.0003 }
 ];
+let mapboxMap = null;
+let mapboxMarkers = [];
 
 const WAVE_H = [4,9,15,7,21,25,18,11,27,23,17,9,20,29,22,15,7,17,25,21,12,5,11,18,23,17,9,14,7,13];
 
@@ -948,30 +927,60 @@ async function loadStories(tagFilter) {
 
 async function initMap() {
   allStories = await loadStories('All');
-  renderMapPins(allStories);
+  if (!mapboxMap && typeof mapboxgl !== 'undefined' && MAPBOX_TOKEN && !MAPBOX_TOKEN.includes('EXAMPLE')) {
+    mapboxgl.accessToken = MAPBOX_TOKEN;
+    mapboxMap = new mapboxgl.Map({
+      container: 'mapbox-container',
+      style: 'mapbox://styles/mapbox/light-v11',
+      center: [UCLA_CENTER.lng, UCLA_CENTER.lat],
+      zoom: 15.5
+    });
+    mapboxMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
+    mapboxMap.on('load', () => renderMapPins(allStories));
+  } else if (mapboxMap) {
+    renderMapPins(allStories);
+  } else {
+    renderMapPinsFallback(allStories);
+  }
+}
+
+function getStoryCoords(s, i) {
+  if (s.lat != null && s.lng != null) return { lng: s.lng, lat: s.lat };
+  const off = OFFSET_COORDS[i % OFFSET_COORDS.length];
+  return { lng: UCLA_CENTER.lng + off.lng, lat: UCLA_CENTER.lat + off.lat };
 }
 
 function renderMapPins(stories) {
-  const container = document.getElementById('map-pins');
-  container.innerHTML = '';
-  stories.slice(0, 8).forEach((s, i) => {
-    const pos = PIN_POSITIONS[i % PIN_POSITIONS.length];
-    const tagColor = TAG_COLOR_MAP[s.tags?.[0]] || 'tp-amber';
+  if (!mapboxMap) return;
+  mapboxMarkers.forEach(m => m.remove());
+  mapboxMarkers = [];
+  stories.slice(0, 20).forEach((s, i) => {
+    const coords = getStoryCoords(s, i);
     const colorHex = tagColorHex(s.tags?.[0]);
-    const pin = document.createElement('div');
-    pin.className = 'pin';
-    pin.style.left = pos.left;
-    pin.style.top = pos.top;
-    pin.innerHTML = `
-      <div class="pin-card">
-        <div class="pin-cat" style="color:${colorHex}">${s.tags?.[0] || 'Story'}</div>
-        <div class="pin-snip">"${s.title.length > 36 ? s.title.slice(0,34)+'…' : s.title}"</div>
-      </div>
-      <div class="pin-stem" style="border-top:8px solid white"></div>
-      <div class="pin-dot" style="background:${colorHex}"></div>`;
-    pin.onclick = () => openStory(s.id);
-    container.appendChild(pin);
+    const el = document.createElement('div');
+    el.className = 'mapboxgl-marker';
+    el.innerHTML = `<div style="width:20px;height:20px;border-radius:50%;background:${colorHex};border:2.5px solid white;box-shadow:0 2px 6px rgba(0,0,0,.2);cursor:pointer;"></div>`;
+    const marker = new mapboxgl.Marker(el)
+      .setLngLat([coords.lng, coords.lat])
+      .addTo(mapboxMap);
+    el.onclick = () => openStory(s.id);
+    mapboxMarkers.push(marker);
   });
+}
+
+function renderMapPinsFallback(stories) {
+  const container = document.querySelector('.map-canvas');
+  if (!container) return;
+  let fallback = container.querySelector('.map-fallback');
+  if (!fallback) {
+    fallback = document.createElement('div');
+    fallback.className = 'map-fallback';
+    fallback.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#EAE3D8;color:var(--muted);font-size:13px;text-align:center;padding:24px;';
+    container.appendChild(fallback);
+  }
+  fallback.innerHTML = MAPBOX_TOKEN && !MAPBOX_TOKEN.includes('EXAMPLE')
+    ? 'Map loading…'
+    : 'Add your Mapbox token to enable the map.<br><a href="https://account.mapbox.com/access-tokens/" target="_blank" style="color:var(--amber);">Get a free token →</a>';
 }
 
 function tagColorHex(tag) {
